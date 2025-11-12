@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GrindTime Logo Preview</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      color: #f8fafc;
+      padding: 40px;
+      margin: 0;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      text-align: center;
+      font-size: 48px;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #f97316, #dc2626);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: #94a3b8;
+      margin-bottom: 50px;
+      font-size: 18px;
+    }
+    
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+    
+    .icon-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(249, 115, 22, 0.2);
+      border-radius: 16px;
+      padding: 30px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    
+    .icon-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(249, 115, 22, 0.5);
+      box-shadow: 0 10px 30px rgba(249, 115, 22, 0.2);
+    }
+    
+    .icon-card h3 {
+      color: #f97316;
+      margin: 20px 0 10px 0;
+      font-size: 24px;
+    }
+    
+    .icon-card p {
+      color: #94a3b8;
+      font-size: 14px;
+      margin: 0;
+    }
+    
+    .icon-display {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 12px;
+      min-height: 150px;
+    }
+    
+    .features {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 30px;
+      margin-top: 40px;
+    }
+    
+    .features h2 {
+      color: #f97316;
+      margin-bottom: 20px;
+      font-size: 28px;
+    }
+    
+    .features ul {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .features li {
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .features li:last-child {
+      border-bottom: none;
+    }
+    
+    .icon-emoji {
+      font-size: 24px;
+      min-width: 30px;
+    }
+    
+    .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #f97316, #dc2626);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-left: auto;
+    }
+    
+    .instructions {
+      background: rgba(34, 197, 94, 0.1);
+      border: 2px solid rgba(34, 197, 94, 0.3);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 30px;
+    }
+    
+    .instructions h3 {
+      color: #22c55e;
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .instructions ol {
+      margin: 15px 0;
+      padding-left: 25px;
+      color: #e2e8f0;
+    }
+    
+    .instructions li {
+      margin: 10px 0;
+    }
+    
+    .code {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      color: #fbbf24;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔥 GrindTime Custom Logo</h1>
+    <p class="subtitle">Professional extension icons with timer, eye tracking, and grind aesthetic</p>
+    
+    <div class="icon-grid">
+      <div class="icon-card">
+        <div class="icon-display">
+          <img src="../icons/icon16.svg" alt="16x16 icon" width="64" height="64">
+        </div>
+        <h3>16×16</h3>
+        <p>Toolbar & menu icon</p>
+      </div>
+      
+      <div class="icon-card">
+        <div class="icon-display">
+          <img src="../icons/icon48.svg" alt="48x48 icon" width="96" height="96">
+        </div>
+        <h3>48×48</h3>
+        <p>Extension management</p>
+      </div>
+      
+      <div class="icon-card">
+        <div class="icon-display">
+          <img src="../icons/icon128.svg" alt="128x128 icon" width="128" height="128">
+        </div>
+        <h3>128×128</h3>
+        <p>Chrome Web Store</p>
+      </div>
+    </div>
+    
+    <div class="features">
+      <h2>Logo Design Elements</h2>
+      <ul>
+        <li>
+          <span class="icon-emoji">⏱️</span>
+          <span><strong>Timer Circle:</strong> Orange-to-red gradient representing focus time & urgency</span>
+          <span class="badge">FOCUS</span>
+        </li>
+        <li>
+          <span class="icon-emoji">👁️</span>
+          <span><strong>Eye Center:</strong> White eye with dark pupil symbolizing face tracking</span>
+          <span class="badge">TRACKING</span>
+        </li>
+        <li>
+          <span class="icon-emoji">🔥</span>
+          <span><strong>Fire Gradient:</strong> Animated flames representing the grind mentality</span>
+          <span class="badge">GRIND</span>
+        </li>
+        <li>
+          <span class="icon-emoji">🎯</span>
+          <span><strong>Clock Hands:</strong> Time tracking with animated pulsing effect</span>
+          <span class="badge">TIME</span>
+        </li>
+        <li>
+          <span class="icon-emoji">🌙</span>
+          <span><strong>Dark Theme:</strong> Sleek navy background (#0f172a) for modern look</span>
+          <span class="badge">STYLE</span>
+        </li>
+      </ul>
+    </div>
+    
+    <div class="instructions">
+      <h3><span>✅</span> Logo Installation Complete!</h3>
+      <p>Your custom GrindTime logos have been created. Follow these steps to see them:</p>
+      <ol>
+        <li>Open Chrome and go to <span class="code">chrome://extensions/</span></li>
+        <li>Enable <strong>"Developer mode"</strong> in the top right</li>
+        <li>Find <strong>GrindTime</strong> extension</li>
+        <li>Click the <strong>reload icon (🔄)</strong> to refresh the extension</li>
+        <li>Check your Chrome toolbar - you should see the new orange timer icon! 🎉</li>
+      </ol>
+      <p style="margin-top: 20px; color: #fbbf24;">
+        <strong>💡 Tip:</strong> The 128×128 icon includes animated flames and pulsing effects that bring the logo to life!
+      </p>
+    </div>
+  </div>
+</body>
+</html>

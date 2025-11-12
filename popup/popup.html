@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GrindTime</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container" id="mainPage">
+    <!-- App Logo/Title -->
+    <div class="app-header">
+      <h1 class="app-title">⏱️ GrindTime</h1>
+    </div>
+
+    <!-- Settings Button (Top Right) -->
+    <button class="settings-btn" id="settingsBtn">⚙️</button>
+    
+    <!-- History Button (Top Left) -->
+    <button class="history-btn" id="historyBtn">📊</button>
+
+    <!-- Mode Selector -->
+    <div class="mode-selector">
+      <button class="mode-dot active" data-mode="work" title="Work Mode"></button>
+      <button class="mode-dot" data-mode="short" title="Short Break"></button>
+      <button class="mode-dot" data-mode="long" title="Long Break"></button>
+      <button class="mode-dot" data-mode="custom" title="Custom"></button>
+    </div>
+
+    <!-- Circular Timer -->
+    <div class="timer-circle">
+      <svg class="progress-ring" width="260" height="260">
+        <circle class="progress-ring-bg" cx="130" cy="130" r="115" />
+        <circle class="progress-ring-circle" id="progressRing" cx="130" cy="130" r="115" />
+      </svg>
+      <div class="timer-content">
+        <div class="timer-display" id="timerDisplay">00:25:00</div>
+      </div>
+    </div>
+
+    <!-- Mode Label -->
+    <div class="mode-label" id="modeLabel">Focus Time</div>
+
+    <!-- Mode Icon -->
+    <div class="mode-icon" id="modeIcon">💼</div>
+
+    <!-- Control Buttons -->
+    <div class="control-buttons">
+      <button class="control-btn start-btn" id="startBtn">
+        <span class="control-icon">▶</span>
+        <span class="control-label">START</span>
+      </button>
+      <button class="control-btn pause-btn" id="pauseBtn" style="display: none;">
+        <span class="control-icon">⏸</span>
+        <span class="control-label">PAUSE</span>
+      </button>
+      <button class="control-btn reset-btn" id="resetBtn">
+        <span class="control-icon">↻</span>
+        <span class="control-label">RESET</span>
+      </button>
+    </div>
+
+    <!-- Time Input (Shows based on current mode) -->
+    <div class="time-input-section" id="timeInputSection">
+      <label id="timeInputLabel">Work Duration</label>
+      <div class="time-inputs">
+        <div class="time-input-group">
+          <input type="number" id="hoursInput" min="0" max="23" value="0" />
+          <span class="time-unit">HH</span>
+        </div>
+        <span class="time-separator">:</span>
+        <div class="time-input-group">
+          <input type="number" id="minutesInput" min="0" max="59" value="25" />
+          <span class="time-unit">MM</span>
+        </div>
+        <span class="time-separator">:</span>
+        <div class="time-input-group">
+          <input type="number" id="secondsInput" min="0" max="59" value="0" />
+          <span class="time-unit">SS</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Face Tracking Status (Always Visible) -->
+    <div class="face-status-card" id="faceStatus">
+      <span class="status-dot"></span>
+      <span class="status-text">Face tracking inactive</span>
+    </div>
+
+    <!-- Stats Indicator (Minimal) -->
+    <div class="stats-mini" id="statsMini">
+      <span class="stat-dot">🔥</span>
+      <span class="stat-text" id="streakCount">0</span>
+      <span class="stat-separator">•</span>
+      <span class="stat-text" id="sessionsToday">0</span>
+      <span class="stat-label">today</span>
+    </div>
+  </div>
+
+  <!-- Settings Modal (Minimal - Voice Only) -->
+  <div class="settings-overlay" id="settingsOverlay">
+    <div class="settings-modal">
+      <div class="settings-header">
+        <h2>Voice Settings</h2>
+        <button class="close-settings" id="closeSettings">×</button>
+      </div>
+      
+      <div class="settings-content">
+        <!-- Voice Settings -->
+        <div class="setting-group">
+          <div class="setting-item">
+            <label for="toneSelect">Speaking Style</label>
+            <select id="toneSelect" class="voice-select">
+              <option value="motivational">💪 Motivational Coach</option>
+              <option value="roast">🔥 Roast Master</option>
+              <option value="aggressive">⚡ Aggressive Trainer</option>
+              <option value="playful">😄 Playful Buddy</option>
+              <option value="professional">👔 Professional Mentor</option>
+              <option value="chill">😎 Chill Friend</option>
+            </select>
+          </div>
+
+          <div class="setting-item">
+            <label for="voiceSelect">Voice</label>
+            <select id="voiceSelect" class="voice-select">
+              <option value="">Loading voices...</option>
+            </select>
+          </div>
+
+          <div class="setting-item">
+            <label for="rateSlider">Speech Rate: <span id="rateValue">1.2</span>x</label>
+            <input type="range" id="rateSlider" min="0.5" max="2.0" step="0.1" value="1.2" class="slider" />
+          </div>
+
+          <div class="setting-item">
+            <label for="pitchSlider">Pitch: <span id="pitchValue">0.9</span></label>
+            <input type="range" id="pitchSlider" min="0.5" max="2.0" step="0.1" value="0.9" class="slider" />
+          </div>
+
+          <div class="setting-item">
+            <label for="volumeSlider">Volume: <span id="volumeValue">80</span>%</label>
+            <input type="range" id="volumeSlider" min="0" max="100" step="5" value="80" class="slider" />
+          </div>
+
+          <button class="btn-test" id="testVoiceBtn">🔊 Test Voice</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

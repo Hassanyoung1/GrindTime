@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Generate GrindTime PNG Icons</title>
+</head>
+<body>
+  <h1>Generating GrindTime Icons...</h1>
+  <p id="status">Please wait...</p>
+  
+  <canvas id="canvas16" width="16" height="16" style="display:none;"></canvas>
+  <canvas id="canvas48" width="48" height="48" style="display:none;"></canvas>
+  <canvas id="canvas128" width="128" height="128" style="display:none;"></canvas>
+  
+  <div id="downloads" style="margin-top: 20px;"></div>
+
+  <script>
+    // Function to create 16x16 icon
+    function create16x16Icon() {
+      const canvas = document.getElementById('canvas16');
+      const ctx = canvas.getContext('2d');
+      
+      // Background
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(0, 0, 16, 16);
+      
+      // Timer circle (outer)
+      const gradient = ctx.createLinearGradient(0, 0, 16, 16);
+      gradient.addColorStop(0, '#f97316');
+      gradient.addColorStop(1, '#dc2626');
+      
+      ctx.strokeStyle = gradient;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(8, 8, 5.5, 0, Math.PI * 2);
+      ctx.stroke();
+      
+      // Clock hand
+      ctx.strokeStyle = '#f97316';
+      ctx.lineWidth = 1.2;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(8, 8);
+      ctx.lineTo(8, 4);
+      ctx.stroke();
+      
+      // Eye (watching)
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(8, 8, 1.5, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.fillStyle = '#0f172a';
+      ctx.beginPath();
+      ctx.arc(8, 8, 0.7, 0, Math.PI * 2);
+      ctx.fill();
+      
+      return canvas.toDataURL('image/png');
+    }
+    
+    // Function to create 48x48 icon
+    function create48x48Icon() {
+      const canvas = document.getElementById('canvas48');
+      const ctx = canvas.getContext('2d');
+      
+      // Background
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(0, 0, 48, 48);
+      
+      // Outer glow circle
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 2;
+      ctx.globalAlpha = 0.5;
+      ctx.beginPath();
+      ctx.arc(24, 24, 18, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+      
+      // Main timer circle
+      const gradient = ctx.createLinearGradient(0, 0, 48, 48);
+      gradient.addColorStop(0, '#f97316');
+      gradient.addColorStop(1, '#dc2626');
+      
+      ctx.strokeStyle = gradient;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(24, 24, 16, 0, Math.PI * 2);
+      ctx.stroke();
+      
+      // Timer segments (progress)
+      ctx.strokeStyle = '#64748b';
+      ctx.lineWidth = 3;
+      ctx.globalAlpha = 0.3;
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath();
+      ctx.arc(24, 24, 16, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.globalAlpha = 1;
+      
+      // Clock hands
+      const fireGradient = ctx.createLinearGradient(24, 24, 24, 12);
+      fireGradient.addColorStop(0, '#fbbf24');
+      fireGradient.addColorStop(0.5, '#f97316');
+      fireGradient.addColorStop(1, '#dc2626');
+      
+      ctx.strokeStyle = fireGradient;
+      ctx.lineWidth = 2.5;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(24, 24);
+      ctx.lineTo(24, 12);
+      ctx.stroke();
+      
+      // Small hand
+      ctx.strokeStyle = '#f97316';
+      ctx.lineWidth = 2;
+      ctx.globalAlpha = 0.6;
+      ctx.beginPath();
+      ctx.moveTo(24, 24);
+      ctx.lineTo(32, 24);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+      
+      // Eye (watching)
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(24, 24, 4, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.fillStyle = '#0f172a';
+      ctx.beginPath();
+      ctx.arc(24, 24, 2.2, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Eye highlight
+      ctx.fillStyle = '#ffffff';
+      ctx.globalAlpha = 0.8;
+      ctx.beginPath();
+      ctx.arc(25, 23, 0.8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      
+      // Fire accent dots
+      ctx.fillStyle = '#f97316';
+      ctx.globalAlpha = 0.8;
+      ctx.beginPath();
+      ctx.arc(24, 6, 1.2, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.fillStyle = '#dc2626';
+      ctx.globalAlpha = 0.6;
+      ctx.beginPath();
+      ctx.arc(42, 24, 1, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      
+      return canvas.toDataURL('image/png');
+    }
+    
+    // Function to create 128x128 icon
+    function create128x128Icon() {
+      const canvas = document.getElementById('canvas128');
+      const ctx = canvas.getContext('2d');
+      
+      // Background
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(0, 0, 128, 128);
+      
+      // Background glow
+      const glowGradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 55);
+      glowGradient.addColorStop(0, 'rgba(249, 115, 22, 0.3)');
+      glowGradient.addColorStop(1, 'rgba(249, 115, 22, 0)');
+      ctx.fillStyle = glowGradient;
+      ctx.fillRect(0, 0, 128, 128);
+      
+      // Outer decorative circle
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 4;
+      ctx.globalAlpha = 0.5;
+      ctx.beginPath();
+      ctx.arc(64, 64, 50, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+      
+      // Main timer circle
+      const mainGradient = ctx.createLinearGradient(0, 0, 128, 128);
+      mainGradient.addColorStop(0, '#f97316');
+      mainGradient.addColorStop(0.5, '#ea580c');
+      mainGradient.addColorStop(1, '#dc2626');
+      
+      ctx.strokeStyle = mainGradient;
+      ctx.lineWidth = 7;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.arc(64, 64, 45, 0, Math.PI * 2);
+      ctx.stroke();
+      
+      // Timer progress segments
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 7;
+      ctx.globalAlpha = 0.4;
+      ctx.setLineDash([12, 8]);
+      ctx.beginPath();
+      ctx.arc(64, 64, 45, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.globalAlpha = 1;
+      
+      // Clock center dot
+      const centerGradient = ctx.createLinearGradient(58, 58, 70, 70);
+      centerGradient.addColorStop(0, '#f97316');
+      centerGradient.addColorStop(1, '#dc2626');
+      ctx.fillStyle = centerGradient;
+      ctx.beginPath();
+      ctx.arc(64, 64, 6, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Main clock hand
+      const fireGradient = ctx.createLinearGradient(64, 64, 64, 28);
+      fireGradient.addColorStop(0, '#fbbf24');
+      fireGradient.addColorStop(0.3, '#f97316');
+      fireGradient.addColorStop(0.7, '#ea580c');
+      fireGradient.addColorStop(1, '#dc2626');
+      
+      ctx.strokeStyle = fireGradient;
+      ctx.lineWidth = 6;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(64, 64);
+      ctx.lineTo(64, 28);
+      ctx.stroke();
+      
+      // Secondary clock hand
+      ctx.strokeStyle = '#f97316';
+      ctx.lineWidth = 5;
+      ctx.globalAlpha = 0.7;
+      ctx.beginPath();
+      ctx.moveTo(64, 64);
+      ctx.lineTo(88, 64);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+      
+      // Eye (watching) - ellipse
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.ellipse(64, 64, 14, 16, 0, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Eye iris
+      ctx.fillStyle = '#0f172a';
+      ctx.beginPath();
+      ctx.arc(64, 64, 8, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Eye pupil
+      const pupilGradient = ctx.createLinearGradient(59, 59, 69, 69);
+      pupilGradient.addColorStop(0, '#f97316');
+      pupilGradient.addColorStop(1, '#dc2626');
+      ctx.fillStyle = pupilGradient;
+      ctx.beginPath();
+      ctx.arc(64, 64, 5, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Eye highlights
+      ctx.fillStyle = '#ffffff';
+      ctx.globalAlpha = 0.9;
+      ctx.beginPath();
+      ctx.arc(67, 61, 3, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.globalAlpha = 0.5;
+      ctx.beginPath();
+      ctx.arc(62, 67, 1.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      
+      // Decorative dots
+      ctx.fillStyle = '#f97316';
+      ctx.globalAlpha = 0.9;
+      ctx.beginPath();
+      ctx.arc(64, 14, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.fillStyle = '#ea580c';
+      ctx.globalAlpha = 0.8;
+      ctx.beginPath();
+      ctx.arc(114, 64, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.fillStyle = '#dc2626';
+      ctx.globalAlpha = 0.8;
+      ctx.beginPath();
+      ctx.arc(64, 114, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.fillStyle = '#f97316';
+      ctx.globalAlpha = 0.7;
+      ctx.beginPath();
+      ctx.arc(14, 64, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      
+      // Text "GRIND"
+      ctx.font = 'bold 11px Arial, Helvetica, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      
+      const textGradient = ctx.createLinearGradient(40, 105, 88, 105);
+      textGradient.addColorStop(0, '#f97316');
+      textGradient.addColorStop(1, '#dc2626');
+      ctx.fillStyle = textGradient;
+      ctx.letterSpacing = '1.5px';
+      ctx.fillText('GRIND', 64, 105);
+      
+      return canvas.toDataURL('image/png');
+    }
+    
+    // Generate all icons
+    window.onload = function() {
+      const icon16 = create16x16Icon();
+      const icon48 = create48x48Icon();
+      const icon128 = create128x128Icon();
+      
+      const downloads = document.getElementById('downloads');
+      downloads.innerHTML = `
+        <h2>✅ Icons Generated!</h2>
+        <p>Right-click each image below and save as:</p>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px;">
+          <div style="text-align: center;">
+            <img src="${icon16}" style="width: 64px; height: 64px; image-rendering: pixelated; background: #1e293b; padding: 10px; border-radius: 8px;">
+            <br><a href="${icon16}" download="icon16.png" style="display: inline-block; margin-top: 10px; padding: 8px 16px; background: #f97316; color: white; text-decoration: none; border-radius: 6px;">Download 16×16</a>
+          </div>
+          <div style="text-align: center;">
+            <img src="${icon48}" style="width: 96px; height: 96px; background: #1e293b; padding: 10px; border-radius: 8px;">
+            <br><a href="${icon48}" download="icon48.png" style="display: inline-block; margin-top: 10px; padding: 8px 16px; background: #f97316; color: white; text-decoration: none; border-radius: 6px;">Download 48×48</a>
+          </div>
+          <div style="text-align: center;">
+            <img src="${icon128}" style="width: 128px; height: 128px; background: #1e293b; padding: 10px; border-radius: 8px;">
+            <br><a href="${icon128}" download="icon128.png" style="display: inline-block; margin-top: 10px; padding: 8px 16px; background: #f97316; color: white; text-decoration: none; border-radius: 6px;">Download 128×128</a>
+          </div>
+        </div>
+        <div style="margin-top: 30px; padding: 20px; background: #22c55e; color: white; border-radius: 8px;">
+          <h3>📁 Save these files to your icons folder:</h3>
+          <ol style="text-align: left;">
+            <li>Right-click each "Download" button and save the files</li>
+            <li>Save them as: <code>icon16.png</code>, <code>icon48.png</code>, <code>icon128.png</code></li>
+            <li>Place them in: <code>/home/hassanyoung1/GrindTime/icons/</code></li>
+            <li>Update manifest.json to use .png instead of .svg</li>
+          </ol>
+        </div>
+      `;
+      
+      document.getElementById('status').textContent = '✅ Done! Scroll down to download.';
+    };
+  </script>
+</body>
+</html>
