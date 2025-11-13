@@ -251,6 +251,6 @@ Stop getting distracted. Start getting results.
 
 ---
 
-**Made with 🔥 by Hassan Young**
+**Made with 🔥 by Hassan Hakeem Olaoluwa**
 
 *Remember: Your competition isn't getting distracted. Why are you?* 💯
