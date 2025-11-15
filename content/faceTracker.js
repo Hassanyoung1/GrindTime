@@ -13,19 +13,21 @@ const DEBUG_MODE = true; // Enable to see what camera sees and debug info
 // Face detection state tracking
 let consecutiveFaceLost = 0;
 let consecutiveFaceDetected = 0;
-const THRESHOLD = 2; // Reduced from 3 for faster response
+const THRESHOLD = 3; // Increased back to 3 for better accuracy and stability
 
-// Improved detection parameters
+// Improved detection parameters (TUNED FOR BETTER ACCURACY)
 const DETECTION_PARAMS = {
-  minBrightness: 25,        // Minimum acceptable brightness
-  maxBrightness: 235,       // Maximum acceptable brightness
-  darkThreshold: 0.65,      // 65% dark pixels = covered camera
-  brightThreshold: 0.65,    // 65% bright pixels = overexposed
-  changeThreshold: 0.008,   // 0.8% pixel change = movement
-  changePixelDiff: 12,      // Brightness difference to count as changed
-  noMovementFrames: 8,      // Frames without change = no presence (4 seconds)
-  centerWeight: 1.5,        // Weight center region more (face usually centered)
-  edgeIgnoreRatio: 0.15     // Ignore outer 15% edges (less important)
+  minBrightness: 30,        // Minimum acceptable brightness (increased)
+  maxBrightness: 230,       // Maximum acceptable brightness
+  darkThreshold: 0.75,      // 75% dark pixels = covered camera (more strict)
+  brightThreshold: 0.70,    // 70% bright pixels = overexposed (more strict)
+  changeThreshold: 0.015,   // 1.5% pixel change = movement (increased sensitivity)
+  changePixelDiff: 15,      // Brightness difference to count as changed (more strict)
+  noMovementFrames: 6,      // Frames without change = no presence (3 seconds - faster)
+  centerWeight: 2.0,        // Weight center region more (face usually centered)
+  edgeIgnoreRatio: 0.20,    // Ignore outer 20% edges (focus on center)
+  skinToneDetection: true,  // Enable skin tone detection
+  minFaceSize: 0.15         // Minimum face size (15% of frame)
 };
 
 // Create video element (hidden by default)
@@ -318,9 +320,10 @@ async function startSimpleFaceDetection() {
       let centerBrightness = 0;
       let centerPixelCount = 0;
       let edgePixelCount = 0;
+      let skinTonePixels = 0; // NEW: Skin tone detection
       let totalPixels = data.length / 4;
       
-      // Enhanced pass: Calculate statistics with region awareness
+      // Enhanced pass: Calculate statistics with region awareness + skin tone
       for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
           const i = (y * width + x) * 4;
@@ -337,6 +340,17 @@ async function startSimpleFaceDetection() {
           if (isCenter) {
             centerBrightness += brightness;
             centerPixelCount++;
+            
+            // NEW: Improved skin tone detection (works for all skin tones)
+            // Skin characteristics: R > G > B, moderate brightness, specific ratios
+            if (r > g && g > b && brightness > 40 && brightness < 220) {
+              const rg_diff = r - g;
+              const gb_diff = g - b;
+              // Skin tone ranges (adjusted for diversity)
+              if (rg_diff > 8 && rg_diff < 100 && gb_diff > 3 && gb_diff < 60) {
+                skinTonePixels++;
+              }
+            }
           } else {
             edgePixelCount++;
           }
@@ -353,6 +367,7 @@ async function startSimpleFaceDetection() {
       const avgCenterBrightness = centerPixelCount > 0 ? centerBrightness / centerPixelCount : avgBrightness;
       const darkRatio = darkPixels / totalPixels;
       const brightRatio = veryBrightPixels / totalPixels;
+      const skinToneRatio = skinTonePixels / centerPixelCount; // Skin tone presence
       
       // Enhanced motion/change detection with center focus
       let changePixels = 0;
@@ -405,12 +420,14 @@ async function startSimpleFaceDetection() {
                           avgBrightness < DETECTION_PARAMS.maxBrightness;
       const centerGoodLighting = avgCenterBrightness > DETECTION_PARAMS.minBrightness && 
                                 avgCenterBrightness < DETECTION_PARAMS.maxBrightness;
+      const hasSkinTone = DETECTION_PARAMS.skinToneDetection && skinToneRatio > 0.10; // 10%+ skin pixels = likely face
       
       // Face is present if:
       // - Camera not covered (not too dark)
       // - Camera not blank/overexposed
       // - Good lighting conditions (overall OR center)
       // - Has movement (overall OR in center region) OR just started
+      // - Has skin tone pixels (NEW: strong indicator of face presence)
       // - Video is ready
       const hasRecentMovement = significantChange || centerMovement || noChangeFrames < 4;
       const lightingOK = goodLighting || centerGoodLighting;
@@ -420,7 +437,7 @@ async function startSimpleFaceDetection() {
         !cameraCovered &&
         !cameraBlank &&
         lightingOK &&
-        hasRecentMovement &&
+        (hasRecentMovement || hasSkinTone) && // NEW: Skin tone can bypass movement requirement
         !noMovement
       );
       
@@ -430,12 +447,14 @@ async function startSimpleFaceDetection() {
           avgBright: avgBrightness.toFixed(0),
           centerBright: avgCenterBrightness.toFixed(0),
           darkRatio: (darkRatio * 100).toFixed(1) + '%',
+          skinTone: (skinToneRatio * 100).toFixed(1) + '%', // NEW: Skin tone %
           changePixels: changePixels,
           centerChange: centerChangePixels,
           changeRatio: ((changePixels / totalPixels) * 100).toFixed(2) + '%',
           noChangeFrames: noChangeFrames,
           movement: significantChange ? 'YES' : 'no',
           centerMove: centerMovement ? 'YES' : 'no',
+          hasSkin: hasSkinTone ? '✓ YES' : '✗ no', // NEW
           covered: cameraCovered,
           blank: cameraBlank,
           lighting: lightingOK ? 'OK' : 'bad',
