@@ -67,6 +67,12 @@
 
   // Notify background script of social media visit
   function notifySocialMediaVisit(action, duration = null) {
+    // Check if extension context is valid
+    if (!chrome.runtime?.id) {
+      console.log('⚠️ Cannot notify - extension context invalid');
+      return;
+    }
+    
     const message = {
       action: 'socialMediaVisit',
       visitAction: action, // 'started' or 'ended'
@@ -77,8 +83,8 @@
     };
     
     console.log('📱 Social media visit:', action, getSiteName(), duration ? `(${duration}ms)` : '');
-    chrome.runtime.sendMessage(message).catch(() => {
-      // Extension context may be invalid, ignore
+    chrome.runtime.sendMessage(message).catch((error) => {
+      console.log('⚠️ Failed to send social media visit:', error.message);
     });
   }
 
@@ -105,8 +111,18 @@
 
   // Check timer status periodically
   function checkTimerStatus() {
+    // Check if extension context is valid before sending message
+    if (!chrome.runtime?.id) {
+      console.log('⚠️ Extension context invalidated, stopping social media tracker');
+      clearInterval(checkInterval);
+      return;
+    }
+    
     chrome.runtime.sendMessage({ action: 'getTimerStatus' }, (response) => {
-      if (chrome.runtime.lastError) return;
+      if (chrome.runtime.lastError) {
+        console.log('⚠️ Timer status check failed:', chrome.runtime.lastError.message);
+        return;
+      }
       
       const wasRunning = isTimerRunning;
       isTimerRunning = response?.timerRunning || false;
@@ -169,6 +185,11 @@
 
   // Listen for messages from background script
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (!chrome.runtime?.id) {
+      console.log('⚠️ Extension context invalid, ignoring message');
+      return false;
+    }
+    
     if (message.action === 'timerStateChanged') {
       const wasRunning = isTimerRunning;
       isTimerRunning = message.timerRunning;
@@ -190,14 +211,29 @@
         tracking: !!visitStartTime,
         site: getSiteName()
       });
+      return true; // Keep channel open for async response
     }
   });
 
-  // Initial check
-  checkTimerStatus();
+  // Initialize with safety check
+  function initialize() {
+    if (!chrome.runtime?.id) {
+      console.log('⚠️ Extension context not ready, retrying...');
+      setTimeout(initialize, 100);
+      return;
+    }
+    
+    console.log('📱 Social Media Tracker initialized');
+    
+    // Initial check
+    checkTimerStatus();
+    
+    // Check timer status every 2 seconds
+    checkInterval = setInterval(checkTimerStatus, 2000);
+  }
   
-  // Check timer status every 2 seconds
-  checkInterval = setInterval(checkTimerStatus, 2000);
+  // Start initialization
+  initialize();
   
   // Cleanup on page unload
   window.addEventListener('beforeunload', () => {
