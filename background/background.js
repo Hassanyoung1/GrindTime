@@ -698,6 +698,9 @@ async function completeTimer() {
   const data = await chrome.storage.local.get(['timerDuration']);
   const duration = data.timerDuration || 0;
   
+  // Play alarm sound! 🔔
+  await playCompletionAlarm();
+  
   // Update streak and stats
   await updateStreak();
   await incrementSessionsToday();
@@ -874,6 +877,43 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   
   return true; // Keep channel open for async response
 });
+
+// ============================================
+// ALARM SOUND PLAYBACK
+// ============================================
+
+/**
+ * Play alarm sound when timer completes
+ */
+async function playCompletionAlarm() {
+  try {
+    // Get user preferences
+    const data = await chrome.storage.local.get(['alarmSoundType', 'alarmEnabled']);
+    const soundType = data.alarmSoundType || 'success';
+    const enabled = data.alarmEnabled !== false; // Enabled by default
+    
+    if (!enabled) {
+      console.log('🔕 Alarm sound disabled by user');
+      return;
+    }
+    
+    console.log('🔔 Playing completion alarm:', soundType);
+    
+    // Ensure offscreen document exists
+    await setupOffscreenDocument();
+    
+    // Send message to offscreen to play sound
+    chrome.runtime.sendMessage({
+      action: 'playAlarmSound',
+      soundType: soundType
+    }).catch((error) => {
+      console.error('Failed to play alarm:', error);
+    });
+    
+  } catch (error) {
+    console.error('Error playing completion alarm:', error);
+  }
+}
 
 // Restore timer state on startup
 chrome.storage.local.get(['timerRunning', 'timeLeft', 'timerStartTime', 'timerDuration'], (data) => {
