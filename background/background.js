@@ -879,6 +879,55 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 });
 
 // ============================================
+// OFFSCREEN DOCUMENT MANAGEMENT
+// ============================================
+
+/**
+ * Create offscreen document for audio playback
+ */
+async function createOffscreenDocument() {
+  // Check if offscreen document already exists
+  const existingContexts = await chrome.runtime.getContexts({
+    contextTypes: ['OFFSCREEN_DOCUMENT']
+  });
+  
+  if (existingContexts.length > 0) {
+    console.log('📄 Offscreen document already exists');
+    return;
+  }
+  
+  console.log('📄 Creating offscreen document for audio...');
+  
+  await chrome.offscreen.createDocument({
+    url: 'offscreen/offscreen.html',
+    reasons: ['AUDIO_PLAYBACK'],
+    justification: 'Playing alarm sound when timer completes'
+  });
+  
+  console.log('✅ Offscreen document created');
+}
+
+/**
+ * Send message to offscreen document
+ */
+async function sendToOffscreen(message) {
+  // Ensure offscreen document exists
+  await createOffscreenDocument();
+  
+  // Send message to offscreen
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(message, (response) => {
+      if (chrome.runtime.lastError) {
+        console.error('Offscreen message error:', chrome.runtime.lastError.message);
+        reject(chrome.runtime.lastError);
+      } else {
+        resolve(response);
+      }
+    });
+  });
+}
+
+// ============================================
 // ALARM SOUND PLAYBACK
 // ============================================
 
@@ -899,19 +948,16 @@ async function playCompletionAlarm() {
     
     console.log('🔔 Playing completion alarm:', soundType);
     
-    // Ensure offscreen document exists
-    await setupOffscreenDocument();
-    
-    // Send message to offscreen to play sound
-    chrome.runtime.sendMessage({
+    // Send message to offscreen document to play sound
+    await sendToOffscreen({
       action: 'playAlarmSound',
       soundType: soundType
-    }).catch((error) => {
-      console.error('Failed to play alarm:', error);
     });
     
+    console.log('✅ Alarm sound request sent');
+    
   } catch (error) {
-    console.error('Error playing completion alarm:', error);
+    console.error('❌ Error playing completion alarm:', error);
   }
 }
 
